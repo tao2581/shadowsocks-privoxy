@@ -55,7 +55,4 @@ WORKDIR $WORK/shadowsocksr-$BRANCH/shadowsocks
 #------------------------------------------------------------------------------
 EXPOSE 8118 7070
 
-EXPOSE $SERVER_PORT
-CMD python server.py -p $SERVER_PORT -k $PASSWORD -m $METHOD -O $PROTOCOL -o $OBFS -G $PROTOCOLPARAM
-
 ENTRYPOINT ["/entrypoint.sh"]
