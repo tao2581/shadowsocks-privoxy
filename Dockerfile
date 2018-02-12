@@ -7,17 +7,27 @@ MAINTAINER bluebu <bluebuwang@gmail.com>
 
 RUN \
   apk --update --upgrade add \
+      python \
+      libsodium \
+      wget \
       py-pip \
       privoxy \
   && rm /var/cache/apk/*
 
-RUN pip install shadowsocks
+ENV SERVER_ADDR     0.0.0.0
+ENV SERVER_PORT     51348
+ENV PASSWORD        psw
+ENV METHOD          aes-128-ctr
+ENV PROTOCOL        auth_aes128_md5
+ENV PROTOCOLPARAM   32
+ENV OBFS            tls1.2_ticket_auth_compatible
+ENV TIMEOUT         300
+ENV DNS_ADDR        8.8.8.8
+ENV DNS_ADDR_2      8.8.4.4
 
-ENV SERVER_ADDR= \
-    SERVER_PORT=8899  \
-    METHOD=aes-256-cfb \
-    TIMEOUT=300 \
-    PASSWORD=
+ARG BRANCH=manyuser
+ARG WORK=~
+
 
 #------------------------------------------------------------------------------
 # Populate root file system:
@@ -26,8 +36,26 @@ ENV SERVER_ADDR= \
 ADD rootfs /
 
 #------------------------------------------------------------------------------
+# Install ShadowsocksR:
+#------------------------------------------------------------------------------
+
+RUN apk --no-cache add python \
+    libsodium \
+    wget
+
+
+RUN mkdir -p $WORK && \
+    wget -qO- --no-check-certificate https://github.com/shadowsocksr/shadowsocksr/archive/$BRANCH.tar.gz | tar -xzf - -C $WORK
+
+
+WORKDIR $WORK/shadowsocksr-$BRANCH/shadowsocks
+
+#------------------------------------------------------------------------------
 # Expose ports and entrypoint:
 #------------------------------------------------------------------------------
 EXPOSE 8118 7070
+
+EXPOSE $SERVER_PORT
+CMD python server.py -p $SERVER_PORT -k $PASSWORD -m $METHOD -O $PROTOCOL -o $OBFS -G $PROTOCOLPARAM
 
 ENTRYPOINT ["/entrypoint.sh"]
