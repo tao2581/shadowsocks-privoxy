@@ -21,7 +21,7 @@ ENV METHOD          rc4-md5
 ENV PROTOCOL        origin
 ENV PROTOCOL_PARAM  ""
 ENV OBFS            http_simple
-ENV OBFS_PARAM      ""
+ENV OBFS_PARAM      23530-aLPl5t.download.microsoft.com
 ENV TIMEOUT         300
 ENV DNS_ADDR        8.8.8.8
 ENV DNS_ADDR_2      8.8.4.4
