@@ -1,6 +1,6 @@
 FROM alpine:latest
 MAINTAINER bluebu <bluebuwang@gmail.com>
-
+RUN echo "http://mirrors.aliyun.com/alpine/v3.8/main/" > /etc/apk/repositories
 #------------------------------------------------------------------------------
 # Environment variables:
 #------------------------------------------------------------------------------
